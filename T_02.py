@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as mp
 
 
 def add_layer(inputs,in_size,out_size,activation_funciont=None):
@@ -34,10 +35,24 @@ sess = tf.Session()
 
 sess.run(init)
 
-for i in range(1000):
+fig = mp.figure()
+ax = fig.add_subplot(1,1,1)
+ax.scatter(x_data,y_data)
+mp.ion()#让绘图不会暂停整个程序
+mp.show()
+
+for i in range(10000):
     sess.run(train_step,feed_dict={xs:x_data,ys:y_data})
     if i%50 == 0:
+        try:
+            ax.lines.remove(lines[0])
+        except Exception:
+            pass
         print(sess.run(loss,feed_dict={xs:x_data,ys:y_data}))
+        prediction_value = sess.run(prediction,feed_dict={xs:x_data})
+        lines = ax.plot(x_data,prediction_value,'r-',lw=5)
+        mp.pause(0.1)
+
 
 
 
